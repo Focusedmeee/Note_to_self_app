@@ -5,23 +5,41 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ListView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Note mTempNote = new Note();
+    private NoteAdapter mNoteAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ((Button)findViewById(R.id.btnShowNote)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogShowNote dialog = new DialogShowNote();
+//        ((Button)findViewById(R.id.btnShowNote)).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                DialogShowNote dialog = new DialogShowNote();
+//
+//                dialog.sendNoteSelected(mTempNote);
+//                dialog.show(getSupportFragmentManager(), "123");
+//            }
+//        });
 
-                dialog.sendNoteSelected(mTempNote);
+        mNoteAdapter = new NoteAdapter();
+
+        ListView listNote = (ListView)findViewById(R.id.listView);
+        listNote.setAdapter(mNoteAdapter);
+        listNote.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Note tempNote = mNoteAdapter.getItem(position);
+
+                DialogShowNote dialog = new DialogShowNote();
+                dialog.sendNoteSelected(tempNote);
                 dialog.show(getSupportFragmentManager(), "123");
             }
         });
@@ -35,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.action_add){
+        if (item.getItemId() == R.id.action_add) {
             DialogNewNote dialog = new DialogNewNote();
             dialog.show(getSupportFragmentManager(), "");
             return true;
@@ -43,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void createNewNote(Note newNote){
-        mTempNote = newNote;
+    public void createNewNote(Note newNote) {
+        mNoteAdapter.addNote(newNote);
     }
 }
