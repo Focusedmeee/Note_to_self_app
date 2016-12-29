@@ -1,16 +1,60 @@
 package com.focusedmeee.note_to_self;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by user pc on 27-Dec-16.
  */
 
 public class Note {
 
+    private static final String JSON_TITLE = "title";
+    private static final String JSON_DESCRIPTION = "description";
+    private static final String JSON_IDEA = "idea";
+    private static final String JSON_TODO = "todo";
+    private static final String JSON_IMPORTANT = "important";
+
     private String mTitle;
     private String mDescription;
     private boolean mIdea;
     private boolean mTodo;
     private boolean mImportant;
+
+    public Note() {
+    }
+
+    public Note(JSONObject jo) throws JSONException {
+        mTitle = jo.getString(JSON_TITLE);
+        mDescription = jo.getString(JSON_DESCRIPTION);
+        mIdea = jo.getBoolean(JSON_IDEA);
+        mTodo = jo.getBoolean(JSON_TODO);
+        mImportant = jo.getBoolean(JSON_IMPORTANT);
+    }
+
+    public JSONObject convertToJSON() throws JSONException {
+        JSONObject jo = new JSONObject();
+
+        jo.put(JSON_TITLE, mTitle);
+        jo.put(JSON_DESCRIPTION, mTitle);
+        jo.put(JSON_IDEA, mIdea);
+        jo.put(JSON_TODO, mTodo);
+        jo.put(JSON_IMPORTANT, mImportant);
+
+        return jo;
+    }
+
+//    public Note convertFromJSON(JSONObject jo)throws JSONException{
+//        Note note = new Note();
+//
+//        note.setTitle(jo.getString(JSON_TITLE));
+//        note.setDescription(jo.getString(JSON_TITLE));
+//        note.setIdea(jo.getBoolean(JSON_IDEA));
+//        note.setTodo(jo.getBoolean(JSON_TODO));
+//        note.setImportant(jo.getBoolean(JSON_IMPORTANT));
+//
+//        return note;
+//    }
 
     public String getDescription() {
         return mDescription;
