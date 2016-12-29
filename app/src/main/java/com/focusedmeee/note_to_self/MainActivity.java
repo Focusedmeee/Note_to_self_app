@@ -1,18 +1,23 @@
 package com.focusedmeee.note_to_self;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private NoteAdapter mNoteAdapter;
+    public static final String NOTE_TO_SELF_PREFS_ID = "Note to self";
 
+    private NoteAdapter mNoteAdapter;
+    private boolean mSound;
+    private int mAnimOption;
+    private SharedPreferences mPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
         mNoteAdapter = new NoteAdapter();
 
-        ListView listNote = (ListView)findViewById(R.id.listView);
+        ListView listNote = (ListView) findViewById(R.id.listView);
         listNote.setAdapter(mNoteAdapter);
         listNote.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -46,6 +51,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+
+        mPrefs = this.getSharedPreferences(NOTE_TO_SELF_PREFS_ID, MODE_PRIVATE);
+        mSound = mPrefs.getBoolean(SettingsActivity.SOUND_KEY, true);
+        mAnimOption = mPrefs.getInt(SettingsActivity.ANIM_OPTION_KEY, SettingsActivity.FAST);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
@@ -53,10 +67,17 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_add) {
-            DialogNewNote dialog = new DialogNewNote();
-            dialog.show(getSupportFragmentManager(), "");
-            return true;
+
+        switch (item.getItemId()) {
+            case R.id.action_add:
+                DialogNewNote dialog = new DialogNewNote();
+                dialog.show(getSupportFragmentManager(), "");
+                break;
+            case R.id.action_settings:
+                Intent intent = new Intent(this, SettingsActivity.class);
+
+                startActivity(intent);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

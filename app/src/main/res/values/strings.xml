@@ -19,4 +19,5 @@
     <string name="rb_slow">Slow</string>
     <string name="rb_none">None</string>
     <string name="button_send_note">Show Note</string>
+
 </resources>
